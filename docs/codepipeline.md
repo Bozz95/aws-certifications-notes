@@ -7,6 +7,7 @@
 - [Triggers](#triggers)
 - [Manual Approval - Approfondimento](#manual-approval---approfondimento)
 - [Cloudformation - Deploy](#cloudformation---deploy)
+- [Best Practices](#best-practices)
 
 Strumento per automaitizzare le pipeline.
 
@@ -83,3 +84,18 @@ Scegliendo l'`Action Mode`:
 
 Sovrascrivendo dei `Template JSON`:
 
+- Specifica a JSON object per sovrascrivere i parametri
+- Questi valori sono ottenuti dai valori passati in input allo step Cloudformation
+- Tutti i nomi dei parametri devono essere presenti nel template per funzionare
+- Ci sono due metodi per passare i valori:
+  - **static**
+  - **dynamic**
+
+## Best Practices
+
+- Si può velocizzare l'esecuzione delle pipeline eseguendo i task in parallelo quando è possibile. Settando lo stesso valore nel parametro `RunOrder` le azioni saranno eseguite in parallelo.
+- Un pattern comune è consigliato deployare nella stessa pipeline in ambiente di pre-prod (QA) -> manual approval -> produzione
+- Usare `EventBridge` per catturare gli eventi della pipeline ed eseguire dei task di analisi o comunque fallback
+- Codepipeline di per se non può eseguire delle chiamate ad altri servizi, però attraverso Lambda o Step Functions è possibile estendere le capacità del servizio, come ad esempio lanciare un container ECS che mostra l'esecuzione delle pipeline attraverso una UI, aggiornare dei valori in DynamoDB o altro.
+- Per poter eseguire le pipeline in `Multi-Region` occorre definire `S3 Artifact Store` in ogni regione in cui devono essere eseguiti delle Codepipeline action. Codepipeline deve avere permessi READ/WRITE in ogni bucket creato.
+- Nella copia degli artefatti `Cross-region` Codepipelien gestisce lo spostamento degli artefatti in modo nativo senza ulteriori configurazioni se i permessi sono settati correttamente
