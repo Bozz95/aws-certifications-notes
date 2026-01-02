@@ -68,3 +68,37 @@ Use case:
 
 - Fare dei test su dati veritieri
 - Load testing su servizi rilasciati dietro un ALB
+
+## Senza CodePipeline
+
+Codebuild può essere attivato senza usare il servizio Codepipeline.
+
+Per farlo si possono creare direttamente dei webhook tra i provider di sorgenti e Codebuild.
+
+## Variabili d'ambiente
+
+Ci sono tre tipologie di variabili 'ambiente:
+
+- **Default Env Var** - Sono quelle che ogni build possiede e sono settate direttamente da AWS
+- **STATIC Custom Env Var** - Che sono definite dall'utente nel file buildspec.yaml o nella confgiurazione del progetto.
+- **Dynamic Custom env Vars** - Sono variabili d'ambiente il cui valore viene preso utilizzando altri servizi, come SSM o SecretManager. Solitamente sono dei riferimenti a questi parametri.
+
+## Build Badges
+
+Sono gli stati delle ultime build, sono esposte su url pubblici e sono supportati da Codecommit, Github e Bitbucket.
+
+Sono disponibili a livello di branch.
+
+## Triggers
+
+Solitamente le best practice consisono nell'usare Eventbridge nel catturare gli eventi da Codecommit e successivamente innescare Codebuild.
+
+Tuttavia se si necessitano di operazioni più complesse è possibili triggerare una lambda prima di codebuild e dopo l'esecuzione di tutti gli ulteriori comandi fargli avviare il progetto codebuild.
+
+Se si usa un servizio esterno basta puntare al webhook esposto di Codebuild per integrarlo direttamente con quel servizio.
+
+## Test reports
+
+Codebuild può generare come artefatto dei test reports che sono usati nella GUI per fare un feedback in base a cosa è fallito o no.
+
+Basta configurare nel file `buildspec.yaml` la sezione `reports` e indicare i file in base al linguaggio e al framework scelto per eseguire unit-tests.
