@@ -11,12 +11,14 @@ tags:
     - [Instance Termination](#instance-termination)
   - [Avanzato](#avanzato)
     - [in-place](#in-place)
-    - [Deployment Hooks](#deployment-hooks)
+    - [EC2 - Deployment Hooks](#ec2---deployment-hooks)
     - [Deployment Configurations](#deployment-configurations)
     - [Triggers](#triggers)
   - [Permessi](#permessi)
 - [Lambda](#lambda)
 - [ECS](#ecs)
+  - [Velicità di deploy](#velicità-di-deploy)
+  - [ECS - Deployment Hooks](#ecs---deployment-hooks)
 
 Sistema per rilasciare nuovi update o rollback di applicazioni, Lambda, ECS, EC2 o on-prem services.
 
@@ -64,7 +66,7 @@ Per eseguire degi deploy `in-place` è necessario indentificare tutte le istanze
 
 In questa tipologia di update il traffico del load balancer viene interrotto finchè l'aggiornamento non sarà terminato
 
-#### Deployment Hooks
+#### EC2 - Deployment Hooks
 
 Sono degli script che CodeDeploy potrà eseguire ad ogni update di istanza Ec2.
 
@@ -121,3 +123,30 @@ Questo spostamento può seguire diverse velocità:
 ## ECS
 
 Molto simile a Lambda, stesse modalità di deploy.
+
+Supporta SOLO Blue-Green e l'immagine deve già esiste in ECR.
+
+Siccome aggiorna la configurazione di container CodeDeploy può solo creare nuove `Task Definition`.
+
+Il file `appspec.yaml` necessario a CodeDeploy dovrà essere salvato in un file S3 e conterrà le info riguardo al Task Definition e al Load balancer.
+
+Rilascerà nuovi task dentro il cluster ECS e cancellerà i vecchi task una volta rialsciati i nuovi.
+
+In una possibile pipeline il task di Codebuild si occuperà di:
+
+- Creare l'immagine del container e pusharla in ECR
+- Creare la nuova task definition in ECS
+- Aggiornare il file appspec.yaml in S3 per consentire a CodeDeploy di lavorare sul rilascio.
+- Passare come input artifact a Codedeploy l'arn al file appspec.yaml a CodeDeploy
+
+### Velicità di deploy
+
+- Linear -> Sostituisce X% istanze ogni N minuti
+- Canary -> Crea tutte le istanze in un nuovo gruppo e invia X% del traffico per N Minuti, Se ok passa al 100%
+- AllAtOnce -> più Veloce e meno costoso ma perdita di servizio
+
+É possibile definire anche un ELB di test per testare il gruppo "green" prima del ribilanciamento di traffico
+
+### ECS - Deployment Hooks
+
+Sono funzioni Lambda lanciare per ogni Deploy, come per il deploy con le istanze EC2 anche qui ci sono varie fasi nel quale con le lambda si può testare la corretta progressione del deploy.
