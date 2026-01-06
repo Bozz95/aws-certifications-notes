@@ -1,1 +1,211 @@
-site_name: AWS Certifications
+site_name: AWS Certifications Study Guide
+site_description: Comprehensive notes and study materials for AWS certifications
+site_author: AWS Certification Student
+site_url: https://your-domain.github.io/aws-certifications-notes/
+
+repo_name: aws-certifications-notes
+repo_url: https://github.com/your-username/aws-certifications-notes
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2024 AWS Certification Study Guide
+
+theme:
+  name: material
+  language: en
+  logo: assets/aws-logo.png
+  favicon: assets/favicon.ico
+  
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: orange
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: orange
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+    - toc.follow
+    - toc.integrate
+
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+      
+    tags:
+      devops: material/microsoft-azure-devops
+      cicd: octicons/infinity-16
+      Security: security
+      Compute: compute
+      Storage: storage
+      Database: database
+      Networking: networking
+      Monitoring: monitoring
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: your-username
+      repo: aws-certifications-notes
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - tags:
+      tags_file: tags.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://Bozz95@github.com/Bozz95/aws-certifications-notes.git
+  
+  tags:
+    DevOps: devops
+    CI/CD: cicd
+    Security: security
+    Compute: compute
+    Storage: storage
+    Database: database
+    Networking: networking
+    Monitoring: monitoring
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started/overview.md
+  - AWS Services:
+    - services/index.md
+    - Developer Tools:
+      - services/developer-tools/index.md
+      - CodeBuild: services/developer-tools/codebuild.md
+      - CodePipeline: services/developer-tools/codepipeline.md
+      - CodeCommit: services/developer-tools/codecommit.md
+      - CodeDeploy: services/developer-tools/codedeploy.md
+      - CodeStar: services/developer-tools/codestar.md
+    - Compute:
+      - services/compute/index.md
+      - EC2: services/compute/ec2.md
+      - Lambda: services/compute/lambda.md
+      - ECS: services/compute/ecs.md
+      - EKS: services/compute/eks.md
+      - Elastic Beanstalk: services/compute/elastic-beanstalk.md
+    - Storage:
+      - services/storage/index.md
+      - S3: services/storage/s3.md
+      - EBS: services/storage/ebs.md
+      - EFS: services/storage/efs.md
+      - FSx: services/storage/fsx.md
+    - Database:
+      - services/database/index.md
+      - RDS: services/database/rds.md
+      - DynamoDB: services/database/dynamodb.md
+      - ElastiCache: services/database/elasticache.md
+      - Redshift: services/database/redshift.md
+    - Networking:
+      - services/networking/index.md
+      - VPC: services/networking/vpc.md
+      - CloudFront: services/networking/cloudfront.md
+      - Route 53: services/networking/route53.md
+      - API Gateway: services/networking/api-gateway.md
+    - Security:
+      - services/security/index.md
+      - IAM: services/security/iam.md
+      - KMS: services/security/kms.md
+      - Secrets Manager: services/security/secrets-manager.md
+      - Systems Manager: services/security/systems-manager.md
+    - Monitoring:
+      - services/monitoring/index.md
+      - CloudWatch: services/monitoring/cloudwatch.md
+      - X-Ray: services/monitoring/xray.md
+      - CloudTrail: services/monitoring/cloudtrail.md
+    - Management:
+      - services/management/index.md
+      - CloudFormation: services/management/cloudformation.md
+      - CDK: services/management/cdk.md
+      - Config: services/management/config.md
+  - Certifications:
+    - certifications/index.md
+    - AWS Certified Developer:
+      - certifications/developer/index.md
+      - Exam Guide: certifications/developer/exam-guide.md
+      - Practice Questions: certifications/developer/practice-questions.md
+    - AWS DevOps Professional:
+      - certifications/devops/index.md
+      - Exam Guide: certifications/devops/exam-guide.md
+      - Practice Questions: certifications/devops/practice-questions.md
+    - AWS Solutions Architect:
+      - certifications/solutions-architect/index.md
+      - Exam Guide: certifications/solutions-architect/exam-guide.md
+      - Practice Questions: certifications/solutions-architect/practice-questions.md
+  - Resources:
+    - resources/index.md
+    - Cheat Sheets: resources/cheat-sheets.md
+    - Best Practices: resources/best-practices.md
+    - Troubleshooting: resources/troubleshooting.md
+    - Useful Links: resources/useful-links.md
+  - Tags: tags.md
+

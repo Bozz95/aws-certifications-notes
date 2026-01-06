@@ -1,3 +1,9 @@
+---
+tags:
+  - devops
+  - cicd
+---
+
 # Codebuild <!-- omit in toc -->
 
 Codebuild è un servizio per eseguire delle sequenze di azioni partendo da un artefatto di input, simile a Jenkins ma completamente gestito.
