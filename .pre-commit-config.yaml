@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        always_run: true
+      - id: end-of-file-fixer
+        always_run: true
+      - id: check-added-large-files
+        always_run: true
