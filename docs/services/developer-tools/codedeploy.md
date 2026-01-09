@@ -16,9 +16,18 @@ tags:
     - [Triggers](#triggers)
   - [Permessi](#permessi)
 - [Lambda](#lambda)
+  - [Pipeline Tipica](#pipeline-tipica)
+  - [Requisiti `appspec.yaml`](#requisiti-appspecyaml)
+  - [Lambda - Deployment Hooks](#lambda---deployment-hooks)
 - [ECS](#ecs)
   - [Velicità di deploy](#velicità-di-deploy)
   - [ECS - Deployment Hooks](#ecs---deployment-hooks)
+- [Rollbacks](#rollbacks)
+  - [Troubleshooting](#troubleshooting)
+    - [`InvalidSignatureException`](#invalidsignatureexception)
+    - [Deployment e Lifecycle Events sono ignorati](#deployment-e-lifecycle-events-sono-ignorati)
+    - [ASG ScaleOut Old Version](#asg-scaleout-old-version)
+    - [Allow Traffic Fail](#allow-traffic-fail)
 
 Sistema per rilasciare nuovi update o rollback di applicazioni, Lambda, ECS, EC2 o on-prem services.
 
@@ -112,13 +121,43 @@ CodeDeploy con il servizio Lambda aiuta a dirottare il traffico delle richieste 
 
 Completamente integrato con SAM, Serverless Application Model.
 
+Crea quindi una nuova versione per lambda che viene poi assegnata ad un Alias.
 Il traffico viene spostato tra l'alias di produzione con la vecchia versione e il nuovo alias.
+
+CodeDeploy per Lambda viene sempre configurato tramite il file `appspec.yaml` salvato in un bucket S3.
+
+> CodeDeploy agent non è necessario perchè si tratta di un servizio serverless
 
 Questo spostamento può seguire diverse velocità:
 
 - `Lineare` - Aumento il traffico di X% ogni N minuti
 - `Canary` - X% verso la nuova versione e poi sposto il traffico completamente dopo i test
 - `AllAtOnce` - Più veloce in assoluto ma non vi è la possibilità di fare del testing.
+
+### Pipeline Tipica
+
+In una pipeline CodeBuild avrà il compito di:
+
+- creare la nuova versione della funzione Lambda
+- Aggiornare il file `appspec.yaml` nel bucket S3 per poi passarlo come input allo step CodeDeploy
+
+### Requisiti `appspec.yaml`
+
+I requisiti per consentire a CodeDeploy di aggiornare una funzione Lambda sono:
+
+- `Nome` della funzione lambda da rilasciare
+- `Alias` della funzione lambda
+- `CurrentVersion` la versione corrente "blue"
+- `TargetVersion` la versione nuova "green", dove sarà trasferito il traffico
+
+### Lambda - Deployment Hooks
+
+Come per ECS sono eseguiti da Lambda functions.
+
+É molto più semplice perchè ci sono solo due fasi nel quale si possono eseguire lambda custom:
+
+- `BeforeAllowTraffic`
+- `AfterAllowTraffic`
 
 ## ECS
 
@@ -150,3 +189,41 @@ In una possibile pipeline il task di Codebuild si occuperà di:
 ### ECS - Deployment Hooks
 
 Sono funzioni Lambda lanciare per ogni Deploy, come per il deploy con le istanze EC2 anche qui ci sono varie fasi nel quale con le lambda si può testare la corretta progressione del deploy.
+
+## Rollbacks
+
+In caso di fallimento CodeDeploy può rilasciare una vecchia versione del servizio, il rollback figura come una attivazione di CodeDeploy per un nuovo rilascio.
+
+Questa azione può essere attivata:
+
+- **Automaticamente** - Se CodeDeploy ha la possibilità di verificare la salute della nuova versione o se sono state settate delle Cloudwatch Rules con dei threshold
+- **Manualmente** - Attivata da un utente
+
+La possibilità di fare rollback può anche essere completamente disattivata.
+
+### Troubleshooting
+
+#### `InvalidSignatureException`
+
+É dovuto ad un time mismatch tra CodeDeploy e l'istanza EC2 o on-prem sul quale deve operare.
+
+#### Deployment e Lifecycle Events sono ignorati
+
+Quando nel gruppo di istanze da sottoporre a CodeDeploy sono presenti troppe istanze `unhealthy` o **troppi Deploy sono falliti**.
+
+Le cause possono essere:
+
+- L'agente CodeDeploy non è attivo sulle istanze o non installato, oppure CodeDeploy non può raggiungere le istanze
+- I permessi di CodeDeploy non sono impostati correttamente
+- Se posto dietro ad un proxy, assicurarsi che l'agente sia stato configurato con il parametro `:proxy_uri:`
+- Anche qui può esserci un problema di sincronizzazione del tempo tra l'agente e CodeDeploy
+
+#### ASG ScaleOut Old Version
+
+Nel caso di aggiornamento ad un Austo Scaling Group, se avviene un evento di `Scale Out` durante l'operazione le nuove istanze saranno lanciate con la versione precedente e non quella nuova desiderata.
+
+In questi casi dove un ASG si troverà con ppiù versioni nello stesso istante CodeDeploy effettuerà un follow-up deployment per assicurarsi di aggiornare tutte le istanze correttamente.
+
+#### Allow Traffic Fail
+
+Se il check per consentire il traffico durante un deploy continua a fallire può essere un problema relativo alla configurazione errata negli ELB.
