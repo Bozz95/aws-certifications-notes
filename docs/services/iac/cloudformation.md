@@ -15,6 +15,7 @@
     - [`Fn::GetAtt`](#fngetatt)
     - [`Fn::FindInMap`](#fnfindinmap)
     - [`Fn::ImportValue`](#fnimportvalue)
+- [RollBacks](#rollbacks)
 
 ## Intro
 
@@ -185,3 +186,16 @@ Resources:
 Some stack expose some values to be used in other templates.
 
 To use those values the `ImportValue` can be used.
+
+## RollBacks
+
+By default Cloudformation doens't let you stay in a non-complete state so during stack creation or update it deletes every resource that was succesfully create alongside the one that made the flow fail.
+
+If the stack was being updated Cloudformation upon fails it goes back to a previous working state, deleting every resources that wasn't on that state.
+
+Due to this behavior the only way to debug issues in this way is to look at Cloudformatio logs or Cloudtrail Api Calls.
+
+You can disable this behavior and keep not-completed state to look at the resources in depth at the resources that made the template fail.
+
+That can be rollbacks failures, this is usually due to resources that cannot rolled back automatically.
+So you need to fix them manually and than complete the rollback, using the `ContinueRollback`.
