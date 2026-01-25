@@ -16,6 +16,7 @@
     - [`Fn::FindInMap`](#fnfindinmap)
     - [`Fn::ImportValue`](#fnimportvalue)
 - [RollBacks](#rollbacks)
+  - [Service Role](#service-role)
 
 ## Intro
 
@@ -199,3 +200,11 @@ You can disable this behavior and keep not-completed state to look at the resour
 
 That can be rollbacks failures, this is usually due to resources that cannot rolled back automatically.
 So you need to fix them manually and than complete the rollback, using the `ContinueRollback`.
+
+### Service Role
+
+Cloudformation needs a role to operate on resource, you can use its SeriviceRole to grant user the ability to provision resources but to not directly work on them.
+
+The user role need `cloudformation:*` and `iam:PassRole` to be able to interact with cloudformation and use its service role.
+
+Usefull for security puporses and minimal access policy for users.
