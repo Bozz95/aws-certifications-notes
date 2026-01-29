@@ -3,6 +3,8 @@
 - [Intro](#intro)
 - [Templates](#templates)
   - [Temmplate Building Blocks](#temmplate-building-blocks)
+- [How It Works](#how-it-works)
+- [Resources](#resources)
   - [Resource Blocks - FAQ](#resource-blocks---faq)
   - [Parameters](#parameters)
     - [Pseudo Parameters](#pseudo-parameters)
@@ -52,6 +54,24 @@ It can be applied in multiple ways:
 - `Conditionals` - List of conditions upon which Cloudformations chooses which resources to create or not
 
 There are Helpers and funcionts such the ones used in Helm charts.
+
+## How It Works
+
+New stacks are defined completely in YAML, each change or deploy will trigger some changes on stack resources.
+
+Each resource can be created, replaced  or deleted.
+**Replacing** an instance it means that the isntance needed an update but according to the resource type underline it needs to be deleted and recreted or just updated.
+
+Parameters are like inputs to pass to the Cloudformatio template to change it without modifying the underline YAML.
+
+## Resources
+
+There are several tyoe of resources, more than 700 and they are constantly working on them.
+
+Resource types are identified with this pattern:
+
+`service-provider::service-name::data-type-name`
+
 
 
 
