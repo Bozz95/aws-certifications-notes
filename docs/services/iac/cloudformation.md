@@ -11,12 +11,15 @@
   - [Mappings](#mappings)
   - [Mapping vs Parameter](#mapping-vs-parameter)
   - [Outputs](#outputs)
+  - [Capabilities](#capabilities)
   - [Conditions](#conditions)
   - [Intrinsic Functions](#intrinsic-functions)
     - [`Fn::Ref`](#fnref)
     - [`Fn::GetAtt`](#fngetatt)
     - [`Fn::FindInMap`](#fnfindinmap)
     - [`Fn::ImportValue`](#fnimportvalue)
+  - [Deletion Policy](#deletion-policy)
+  - [Stack Policies](#stack-policies)
 - [RollBacks](#rollbacks)
   - [Service Role](#service-role)
 
@@ -71,10 +74,6 @@ There are several tyoe of resources, more than 700 and they are constantly worki
 Resource types are identified with this pattern:
 
 `service-provider::service-name::data-type-name`
-
-
-
-
 
 ### Resource Blocks - FAQ
 
@@ -133,6 +132,14 @@ Best way to orchestrate work across teams that manage different stacks that need
 To leverage the import the function `!ImportValue` which needs to reference the output name, indicated by the `Export` field in the template.
 
 Using import in one stack make it deendent on the stack from where the value is taken, so the "father" stack cannot be deleted before the "child" one. This in called `Stack link`.
+
+### Capabilities
+
+They are like "flags" to assign specific behavior to Cloudformtion.
+
+- `CAPABILITY NAMED IAM` or `Capability IAM` - Used in Cloudformation stacks where IAM Resources need to be managed by the Cloudformation stack
+- `CAPABILITY AUTO EXPAND` - is mandatory when used with Stack which uses Macros or Nested stack, indicates that the template may change dynamically
+- `insufficient Capabilities Exceptions` -  Which is more like an alarm when capabilites need to be aknowleged before deploying it. **This is just a security measure**.
 
 ### Conditions
 
@@ -207,6 +214,28 @@ Resources:
 Some stack expose some values to be used in other templates.
 
 To use those values the `ImportValue` can be used.
+
+### Deletion Policy
+
+You can specify what to do to provisioned resources when the stack is being deleted.
+
+Default is `Delete`, but when needed it can be changed for safety measure or backup purposes.
+
+With deletion policy `Retain` you can just retain the resource provisioned with Cloudformation without any major risk of being deleted during stack destruction.
+
+Another important policy is `Snapshot`, which indicates to Cloudformation to make a Snapshot of said resource before destroying it. Beware that not every AWS Service supports this mode.
+
+With Termination Protection you can manage which resource to NOT Delete when the stack is removed.
+
+### Stack Policies
+
+This policies are made to enable Cloudformation to update exisiting resources during Template deployment.
+
+They are define via  JSON.
+
+By default all resources in the same stack are allowed to be modified.
+
+
 
 ## RollBacks
 
