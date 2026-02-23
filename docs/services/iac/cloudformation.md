@@ -20,6 +20,7 @@
     - [`Fn::ImportValue`](#fnimportvalue)
   - [Deletion Policy](#deletion-policy)
   - [Stack Policies](#stack-policies)
+- [Custom Resources](#custom-resources)
 - [RollBacks](#rollbacks)
   - [Service Role](#service-role)
 
@@ -235,7 +236,12 @@ They are define via  JSON.
 
 By default all resources in the same stack are allowed to be modified.
 
+## Custom Resources
 
+Not every resource can be provisioned by Cloudformation, or are not yet supported.
+
+Every custom resource defines the logic behind which the resources are provisioanaed.
+The engine which run the openrations to created, update or delete  are all run trough Lamda functions.
 
 ## RollBacks
 
