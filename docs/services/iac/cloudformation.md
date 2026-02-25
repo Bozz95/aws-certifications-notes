@@ -18,12 +18,16 @@
     - [`Fn::GetAtt`](#fngetatt)
     - [`Fn::FindInMap`](#fnfindinmap)
     - [`Fn::ImportValue`](#fnimportvalue)
+    - [`Fn::Base64`](#fnbase64)
   - [Deletion Policy](#deletion-policy)
   - [Stack Policies](#stack-policies)
 - [Custom Resources](#custom-resources)
 - [Dynamic References](#dynamic-references)
 - [RollBacks](#rollbacks)
   - [Service Role](#service-role)
+- [Common Problems](#common-problems)
+  - [Improving management for UserData script](#improving-management-for-userdata-script)
+    - [`cfn-init`](#cfn-init)
 
 ## Intro
 
@@ -217,6 +221,10 @@ Some stack expose some values to be used in other templates.
 
 To use those values the `ImportValue` can be used.
 
+#### `Fn::Base64`
+
+Function used to convert long strings into base 64 and pass them to resources which will need them, like the user_script data for the EC2 instances.
+
 ### Deletion Policy
 
 You can specify what to do to provisioned resources when the stack is being deleted.
@@ -276,7 +284,6 @@ The other way around is to create the secret ourself and point it, using the `re
 
 We can also create a attachment between RDS and the secret to establish secret rotations.
 
-
 ## RollBacks
 
 By default Cloudformation doens't let you stay in a non-complete state so during stack creation or update it deletes every resource that was succesfully create alongside the one that made the flow fail.
@@ -297,3 +304,31 @@ Cloudformation needs a role to operate on resource, you can use its SeriviceRole
 The user role need `cloudformation:*` and `iam:PassRole` to be able to interact with cloudformation and use its service role.
 
 Usefull for security puporses and minimal access policy for users.
+
+## Common Problems
+
+Here a list of common problems with standard solution offered by Cloudformation to manage them according to the best practices.
+
+### Improving management for UserData script
+
+When there's a large UserData script or we want to make a new more readable one, or perhaps you would like to evolve the EC2 without creating a new one.
+
+Cloudformation offers some helper Scripts:
+
+#### `cfn-init`
+
+It is a Block of the EC2 Metadata where the end-user can specify the configuration of the instance.
+
+Here you can specify:
+
+- `Packages`: which will be installed on the instance, like Python, Node, Postgres and so on.
+- `Groups`: it's possible to define user groupd for the instance
+- `Users`: defining users and the groups which they belong to
+- `Sources`: Download files and archives to be used inside the EC2
+- `Files`: Creates files inside the EC2, using inline files (like for the user_data) or pulling them from a server
+- `Commands`: A series of commands
+- `Services`: Launch a list of sysvinit
+
+In practice the `csf-init` command manage all these informations, interpreting all metadata and installing the specified things.
+
+This command will communicate to Cloudformation in order to make it possible to react about the termination of the operation on the EC2.
