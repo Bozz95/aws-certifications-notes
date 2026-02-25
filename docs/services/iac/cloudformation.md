@@ -21,6 +21,7 @@
   - [Deletion Policy](#deletion-policy)
   - [Stack Policies](#stack-policies)
 - [Custom Resources](#custom-resources)
+- [Dynamic References](#dynamic-references)
 - [RollBacks](#rollbacks)
   - [Service Role](#service-role)
 
@@ -256,6 +257,25 @@ Once the Lambda run successfully the Cloud Formation can continue its execution.
 Lambda or Sns don't call the CF API directly, they use a pre-signed S3 bucket to store data (json response) that Cloud Formation will read.
 
 There are libraries for send cloudformation reponses to S3.
+
+## Dynamic References
+
+Dynamic References are used to get values that cannot be stored in the template or change in a scope outside of it.
+
+Normally these values are stored and can be retrieved in:
+
+- `SSM parameters` for simple String and SecureStrings
+- `SecretManager`
+
+- SSM Syntax: `{{resolve::ssm(or ssm-secure):parameter-name:version}}` I.E: {{resolce:ssm-secure:/iam/pippo/access_key:2}}
+- SecretManager: `{{resolve:secretsmanager:secret-id:secret-string:json-key:version-stage:version-id}}` I.E: {{resolve:secretsmanager:MyAccessKey:SecretString:access-access-key:value}}
+
+Fun Fact: RDS cluster resource if created with parameter `ManageMasgerUserPassword: true` stores implicitly the admin pwd in SecretsManager, from which we can reference the arn in the outputs to get the value out.
+
+The other way around is to create the secret ourself and point it, using the `resolve` function in the argument of the rds resource.
+
+We can also create a attachment between RDS and the secret to establish secret rotations.
+
 
 ## RollBacks
 
