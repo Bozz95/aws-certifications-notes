@@ -240,8 +240,22 @@ By default all resources in the same stack are allowed to be modified.
 
 Not every resource can be provisioned by Cloudformation, or are not yet supported.
 
-Every custom resource defines the logic behind which the resources are provisioanaed.
-The engine which run the openrations to created, update or delete  are all run trough Lamda functions.
+So `Custom Resources` comes to the rescue, thei best use case scenarios are:
+
+- Define resources not yet supported natively by CF
+- Provision resources outside the AWS Domain, such as on-prem isntances or 3rd party ones (other providers)
+- Create some scripts, like local exec (Terraform), to be run on creation/deletion/update of resource. I.E to empty a S3 bucket before destruction.
+
+Syntax: `Custom::NomeOfTheCustomResource`
+
+They are backed up the Lambda or an Sns Topic.
+When defining a CR you specify a Lambda which will be called by Cloud Formation with input parameters specified in the Custom Resource definition.
+
+Once the Lambda run successfully the Cloud Formation can continue its execution.
+
+Lambda or Sns don't call the CF API directly, they use a pre-signed S3 bucket to store data (json response) that Cloud Formation will read.
+
+There are libraries for send cloudformation reponses to S3.
 
 ## RollBacks
 
