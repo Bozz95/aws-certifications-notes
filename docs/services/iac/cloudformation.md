@@ -28,6 +28,7 @@
 - [Common Problems](#common-problems)
   - [Improving management for UserData script](#improving-management-for-userdata-script)
     - [`cfn-init`](#cfn-init)
+    - [`cfn-signal` and Wait Conditions](#cfn-signal-and-wait-conditions)
 
 ## Intro
 
@@ -313,7 +314,7 @@ Here a list of common problems with standard solution offered by Cloudformation 
 
 When there's a large UserData script or we want to make a new more readable one, or perhaps you would like to evolve the EC2 without creating a new one.
 
-Cloudformation offers some helper Scripts:
+Cloudformation offers some helper Scripts:, which are python scripts:
 
 #### `cfn-init`
 
@@ -327,8 +328,22 @@ Here you can specify:
 - `Sources`: Download files and archives to be used inside the EC2
 - `Files`: Creates files inside the EC2, using inline files (like for the user_data) or pulling them from a server
 - `Commands`: A series of commands
-- `Services`: Launch a list of sysvinit
+- `Services`: Launch a list of sysvinit, which are services
 
-In practice the `csf-init` command manage all these informations, interpreting all metadata and installing the specified things.
+In practice the `csf-init`, which is a python script, command manage all these informations, interpreting all metadata and installing the specified things.
 
 This command will communicate to Cloudformation in order to make it possible to react about the termination of the operation on the EC2.
+
+Complex EC2 instances are gonna be more readable.
+
+All logs of this script are gonna be savesin `/var/log/cfn-init.log`.
+
+#### `cfn-signal` and Wait Conditions
+
+Python script to run after the `cfn-init` to knwo if the init script was properly executed.
+
+It used alongside a `Wait condition` which keeps the exeution of Cloudformation in "loop" untile it doesn0t receive a Signal passed. The wait condition can receive the signal from 1 or more resources, and the number of signlas needed to continue execution can be customized according to needs.
+
+> `Wait Condition` can be customized with a timeout of x minutes.
+
+To debug failed signalgs it is suggested to change the default behaviors of Cloudformation from `rollback on failure` to `preserve`
