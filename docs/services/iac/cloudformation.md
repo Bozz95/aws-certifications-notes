@@ -29,6 +29,7 @@
   - [Improving management for UserData script](#improving-management-for-userdata-script)
     - [`cfn-init`](#cfn-init)
     - [`cfn-signal` and Wait Conditions](#cfn-signal-and-wait-conditions)
+- [Nested Stacks](#nested-stacks)
 
 ## Intro
 
@@ -347,3 +348,14 @@ It used alongside a `Wait condition` which keeps the exeution of Cloudformation 
 > `Wait Condition` can be customized with a timeout of x minutes.
 
 To debug failed signalgs it is suggested to change the default behaviors of Cloudformation from `rollback on failure` to `preserve`
+
+## Nested Stacks
+
+Nested stacks are used when there's a need to re-use on another Cloudformation script a resource that was previously already instantated.
+
+Difference with `Cross Stacks`:
+
+| Cross Stacks                                            | Nested Stacks                       |
+| ------------------------------------------------------- | ----------------------------------- |
+| Resources in one stack have different lifecycle         | Resources have the same lifecycle   |
+| Outputs are share to other stacks via `Fn::ImportValue` | Resources are directlly referenced. |
