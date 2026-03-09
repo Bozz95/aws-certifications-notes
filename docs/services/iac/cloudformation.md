@@ -30,6 +30,7 @@
     - [`cfn-init`](#cfn-init)
     - [`cfn-signal` and Wait Conditions](#cfn-signal-and-wait-conditions)
 - [Nested Stacks](#nested-stacks)
+- [`Depends On`](#depends-on)
 
 ## Intro
 
@@ -353,9 +354,19 @@ To debug failed signalgs it is suggested to change the default behaviors of Clou
 
 Nested stacks are used when there's a need to re-use on another Cloudformation script a resource that was previously already instantated.
 
+Nested stack are like modules in Terraform.
+
 Difference with `Cross Stacks`:
 
 | Cross Stacks                                            | Nested Stacks                       |
 | ------------------------------------------------------- | ----------------------------------- |
 | Resources in one stack have different lifecycle         | Resources have the same lifecycle   |
 | Outputs are share to other stacks via `Fn::ImportValue` | Resources are directlly referenced. |
+
+When using a NestedStack the first thing you tell Cloudformaiton is where to find the Stack template to build the nested one, and its type.
+
+## `Depends On`
+
+Cloudforamtion way to manage depencencies consist into the Key attributes `DependsOn` attribute.
+
+They keyword `DependsOn` makes sure that the resource on which is attached is created after the one referenced.
