@@ -31,6 +31,8 @@
     - [`cfn-signal` and Wait Conditions](#cfn-signal-and-wait-conditions)
 - [Nested Stacks](#nested-stacks)
 - [`Depends On`](#depends-on)
+- [Stacksets](#stacksets)
+  - [Permissions](#permissions)
 
 ## Intro
 
@@ -370,3 +372,27 @@ When using a NestedStack the first thing you tell Cloudformaiton is where to fin
 Cloudforamtion way to manage depencencies consist into the Key attributes `DependsOn` attribute.
 
 They keyword `DependsOn` makes sure that the resource on which is attached is created after the one referenced.
+
+## Stacksets
+
+Stacksets in CF are used to manage stacks across multiple accounts.
+
+It needs to define:
+
+- **Administrator** account which will create and manage the StackSet
+- **Target** accounts where the defined StackSets will execute.
+
+When the Stackset is updated in the administrator account it will update all the target ones.
+
+### Permissions
+
+To manage permissions in all the accounts there are 2 ways.
+
+- **Self-managed permissions**
+  - Permissions must be created manually in each Admin and Target Account
+  - Each Target account will have a trust relationship where wiht the Admin Account role
+- **Service Managed Permissions**
+  - Only when managing account using AWS Organizations
+  - StackSets will automatically creates role on your behalf
+  - All feature of AWS Organizations **MUST BE ENABLED**
+  - Each account added to the OU will have the StackSet automatically deployed
