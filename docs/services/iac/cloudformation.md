@@ -33,6 +33,9 @@
 - [`Depends On`](#depends-on)
 - [Stacksets](#stacksets)
   - [Permissions](#permissions)
+- [Troubleshooting](#troubleshooting)
+  - [Deletion failing](#deletion-failing)
+  - [StackSet Troubleshooting](#stackset-troubleshooting)
 
 ## Intro
 
@@ -396,3 +399,25 @@ To manage permissions in all the accounts there are 2 ways.
   - StackSets will automatically creates role on your behalf
   - All feature of AWS Organizations **MUST BE ENABLED**
   - Each account added to the OU will have the StackSet automatically deployed
+
+## Troubleshooting
+
+This section will talk about questions that can often be present at an exam.
+
+### Deletion failing
+
+When a CF stack is being delete it can fail cause the underline resources might need the resource itself to be emptied before deleting them.
+
+For example, by default, an S3 bucket cannot be deleted if before hand the bucket is emptied.
+This empty action, for this case only, must be manual (deleting file manually) or by a Custom Resource which can call a Lambda to empty the filename.
+
+Same thing with security groups which needs to be detatched from any EC2.
+
+### StackSet Troubleshooting
+
+When applying a StackSet but on one or more instance of if it fails and the stack status changes to OUTDATED there can be ultiple reasons:
+
+- Not enough Permissions in the tarted account
+- The StackSet is trying to create a global resource which name needs to be UNIQUE globally, like an S3 buket.
+- Missing trustrelationship across target and admin account
+- Reached a limits or quota on the number of resources in that account
