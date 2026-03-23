@@ -36,6 +36,8 @@
 - [Troubleshooting](#troubleshooting)
   - [Deletion failing](#deletion-failing)
   - [StackSet Troubleshooting](#stackset-troubleshooting)
+- [Drifting](#drifting)
+  - [`cfn-hup`](#cfn-hup)
 
 ## Intro
 
@@ -421,3 +423,19 @@ When applying a StackSet but on one or more instance of if it fails and the stac
 - The StackSet is trying to create a global resource which name needs to be UNIQUE globally, like an S3 buket.
 - Missing trustrelationship across target and admin account
 - Reached a limits or quota on the number of resources in that account
+
+## Drifting
+
+A **drift** happens when the infrastructure created via Cloudformation gets updated manually, so the change was applied outside of the script definition.
+
+Using the CF command `drift` you can detect on a stack level or specific resources what chaged from the old state o of the infra.
+
+The drift command can be also used on `StackSet` to find out which actual implementation fot he script drifted so much via manual changes.
+
+Note that changes applied to the single Stack, bypassing the StackSet config, aren't considered as drifts.
+
+### `cfn-hup`
+
+Another script part of the CF script suites. IT is an helper todeect drift automatically.
+
+It needs a configuration ont the host, on path ``.
