@@ -5,6 +5,9 @@
 - [Components](#components)
 - [High Availability](#high-availability)
 - [Update Kinds](#update-kinds)
+- [Multiple environments](#multiple-environments)
+- [Web Server vs Worker Environment](#web-server-vs-worker-environment)
+- [Notification - Eventbridge](#notification---eventbridge)
 
 ## Intro
 
@@ -79,3 +82,28 @@ There is a choice between `Application` o `Network` Load balancer.
   - creates a completely new but equiparable environment
   - Via Load balancers can decide how much traffic send to each environment
   - One failure means the whole systemudpate will
+
+## Multiple environments
+
+You can configure Beansstalk to have mulitple environments for the same project (Prod, prod1, prodN, Dev, QA...), you can apply to them an update using the preferred [update kind](#update-kinds) and them swap environments to altoghether to have no downtime.
+
+To make it possible Beanstalk offer the `clone` functionality.
+
+## Web Server vs Worker Environment
+
+`Web Server` mode is ideal for, as the name suggests, web servers so serving fast web pages.
+
+But when the workload takes long to complete it is recommended to not make the web server eat those computational spikes to avoid throttling.
+
+To make this possible is possible to decouple the application into tiers using `Worker Environments`.
+
+For example you can configure a worker tier to poll, in an autoscaling group, an sqs queue and process the uploaded videos without impacting the web server nodes.
+
+## Notification - Eventbridge
+
+ElasticBeanstalk offers a lot of events to listen to:
+
+- **Environment Operation Status** - create, update, terminate each one gives the start, success or fail event
+- **Other Resources Status** - ASG, ELB, EC2 for each create/delete events
+- **Manage Updates Status** - started or failed
+- **Environment Health Status**
