@@ -14,7 +14,7 @@ theme:
   language: en
   logo: assets/aws-logo.png
   favicon: assets/favicon.ico
-  
+
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -55,7 +55,7 @@ theme:
     repo: fontawesome/brands/github
     edit: material/pencil
     view: material/eye
-      
+
     tags:
       devops: material/microsoft-azure-devops
       cicd: octicons/infinity-16
@@ -123,7 +123,7 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://Bozz95@github.com/Bozz95/aws-certifications-notes.git
-  
+
   tags:
     DevOps: devops
     CI/CD: cicd
@@ -183,8 +183,8 @@ nav:
       - X-Ray: services/monitoring/xray.md
       - CloudTrail: services/monitoring/cloudtrail.md
     - Management:
-      - services/management/index.md
-      - CloudFormation: services/management/cloudformation.md
+      - CloudFormation: services/iac/cloudformation.md
+      - Service Catalog: services/iac/service-catalog.md
       - CDK: services/management/cdk.md
       - Config: services/management/config.md
   - Certifications:
@@ -208,4 +208,3 @@ nav:
     - Troubleshooting: resources/troubleshooting.md
     - Useful Links: resources/useful-links.md
   - Tags: tags.md
-
