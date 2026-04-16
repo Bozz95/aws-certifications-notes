@@ -3,6 +3,7 @@
 - [Description](#description)
 - [Templates](#templates)
 - [Deploy](#deploy)
+- [Updates and Publish](#updates-and-publish)
 
 
 ## Description
@@ -34,3 +35,13 @@ Using the command `sam deploy` you can package (used to be a separate command) a
 You can rapidly synch you lambda code with the local changes using `sam synch --watch`.
 
 > Note: `synch` bypasses the transformation into cloudformation code, it just load the lambda code into the function to make it faster.
+
+## Updates and Publish
+
+The main useful feature used by SAM to deploy Lambda's is using `aliases`.
+
+Using aliases brings the possibility to keep your lambda function always updated without updating the references in the code using it.
+
+Also to make the update itself it is using the AWS CodeDeploy service.
+
+Another importa feature to implement is `alarms` during the update to measure the quality of the new deployment and to trigger an eventual rollback.
