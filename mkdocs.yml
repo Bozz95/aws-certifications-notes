@@ -146,13 +146,14 @@ nav:
       - CodeCommit: services/developer-tools/codecommit.md
       - CodeDeploy: services/developer-tools/codedeploy.md
       - CodeStar: services/developer-tools/codestar.md
+      - CDK: services/serverless/cdk.md
     - Compute:
       - services/compute/index.md
       - EC2: services/compute/ec2.md
       - Lambda: services/compute/lambda.md
       - ECS: services/compute/ecs.md
       - EKS: services/compute/eks.md
-      - Elastic Beanstalk: services/compute/elastic-beanstalk.md
+      - Elastic Beanstalk: services/compute/elasticbeanstalk.md
     - Storage:
       - services/storage/index.md
       - S3: services/storage/s3.md
@@ -185,8 +186,9 @@ nav:
     - Management:
       - CloudFormation: services/iac/cloudformation.md
       - Service Catalog: services/iac/service-catalog.md
-      - CDK: services/management/cdk.md
-      - Config: services/management/config.md
+      - CDK: services/iac/cdk.md
+      - Step Functions: services/serverless/step-functions.md
+      - SAM: services/serverless/sam.md
   - Certifications:
     - certifications/index.md
     - AWS Certified Developer:
